@@ -1,0 +1,10 @@
+/ Yarn + Parchment Mappings /
+repositories { maven { url = "https://maven.parchmentmc.org" }}
+dependencies {
+  mappings loom.layered() {
+    it.mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    it.parchment "org.parchmentmc.data:parchment-${parchment_version}@zip"
+  }
+}
+println("\nYarn Mappings: $yarn_mappings")
+println("ParchmentMC: $parchment_version")

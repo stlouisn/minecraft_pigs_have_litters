@@ -1,6 +1,30 @@
-build
-run
+
+# eclipse
+eclipse
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
+!.idea/dictionaries
+!.idea/inspectionProfiles
+!.idea/.name
+
+# gradle
+build/*
+!build/libs
 .gradle
-.idea
-.DS_Store
-gradle/.DS_Store
+
+# architectury
+.architectury-transformer
+
+# minecraft
+run
+runs

@@ -1,18 +1,8 @@
 pluginManagement {
     repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        maven {
-            name = 'Mod Menu Api'
-            url = 'https://maven.terraformersmc.com/releases/com/terraformersmc/modmenu/'
-        }
-        maven {
-            name = 'Cloth Config Api'
-            url = 'https://maven.shedaniel.me/'
-        }
-        mavenCentral()
+        maven { url = "https://maven.fabricmc.net/" }
         gradlePluginPortal()
     }
 }
+
+rootProject.name = archives_base_name

@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import pepjebs.pigs_have_litters.PigsHaveLittersMod;
 
 import java.util.Random;
 
@@ -22,45 +21,44 @@ public abstract class PigsHaveLittersMixin extends AnimalEntity {
         super.breed(world, other);
         for (int i = 0; i < getPigletSpawnCount(); i++) {
             PassiveEntity passiveEntity = this.createChild(world, other);
-            if (passiveEntity == null) return;
+            if (passiveEntity == null) {
+                return;
+            }
             passiveEntity.setBaby(true);
             passiveEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), 0.0F, 0.0F);
             world.spawnEntityAndPassengers(passiveEntity);
         }
     }
 
-    @Shadow @Nullable @Override
-    public PigEntity createChild(ServerWorld world, PassiveEntity entity) { return null; }
+    @Shadow
+    @Nullable
+    @Override
+    public PigEntity createChild(ServerWorld world, PassiveEntity entity) {
+        return null;
+    }
+
+    @Unique
+    private static final float[] CUMULATIVE_CHANCES = {0.20f, 0.90f, 0.95f}; // 20%, 70%, 5%
+    @Unique
+    private static final int[] PIGLET_COUNTS = {1, 2, 3};
 
     @Unique
     private int getPigletSpawnCount() {
-        // Formatted "Probability:Count,..."
-        String litterSizing = PigsHaveLittersMod.DEFAULT_LITTER_CHANCES;
-        if (PigsHaveLittersMod.CONFIG != null) {
-            litterSizing = PigsHaveLittersMod.CONFIG.litterSizingChances;
-        }
-        var confs = litterSizing.split(",");
-        int currentSum = 0;
-        Random random = new Random();
-        float selection = random.nextFloat();
-        for (var c : confs) {
-            var entry = c.split(":");
-            if (entry.length != 2) continue;
-            int chances = Integer.parseInt(entry[0]);
-            int pigletCount = Integer.parseInt(entry[1]) - 1;
-            if (selection <= (chances / 100.0f) + (currentSum / 100.0f)) {
-                return pigletCount;
+        float rand = java.util.concurrent.ThreadLocalRandom.current().nextFloat();
+        for (int i = 0; i < CUMULATIVE_CHANCES.length; i++) {
+            if (rand < CUMULATIVE_CHANCES[i]) {
+                return PIGLET_COUNTS[i];
             }
-            currentSum += chances;
         }
-        return 0;
+        return 0; // fallback, should not happen if cumulative chances cover [0,1)
     }
 
-    // 3 Dummy methods below
     protected PigsHaveLittersMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
-    public boolean cannotBeSilenced() { return super.cannotBeSilenced(); }
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
+    }
 }
