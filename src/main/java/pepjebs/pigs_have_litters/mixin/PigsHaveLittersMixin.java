@@ -38,19 +38,16 @@ public abstract class PigsHaveLittersMixin extends AnimalEntity {
     }
 
     @Unique
-    private static final float[] CUMULATIVE_CHANCES = {0.20f, 0.90f, 0.95f}; // 20%, 70%, 5%
-    @Unique
-    private static final int[] PIGLET_COUNTS = {1, 2, 3};
-
-    @Unique
     private int getPigletSpawnCount() {
         float rand = java.util.concurrent.ThreadLocalRandom.current().nextFloat();
-        for (int i = 0; i < CUMULATIVE_CHANCES.length; i++) {
-            if (rand < CUMULATIVE_CHANCES[i]) {
-                return PIGLET_COUNTS[i];
-            }
+        // 25% chance of 1 piglet, 70% chance of 2 piglets, 5% chance of 3 piglets
+        if (rand < 0.25f) {
+            return 1;
+        } else if (rand < 0.95f) {
+            return 2;
+        } else {
+            return 3;
         }
-        return 0; // fallback, should not happen if cumulative chances cover [0,1)
     }
 
     protected PigsHaveLittersMixin(EntityType<? extends AnimalEntity> entityType, World world) {
