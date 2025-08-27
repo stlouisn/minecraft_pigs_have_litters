@@ -40,10 +40,10 @@ public abstract class PigsHaveLittersMixin extends AnimalEntity {
     @Unique
     private int getPigletSpawnCount() {
         float rand = java.util.concurrent.ThreadLocalRandom.current().nextFloat();
-        // 25% chance of 1 piglet, 70% chance of 2 piglets, 5% chance of 3 piglets
-        if (rand < 0.25f) {
+        // 50% chance of 1 piglet, 40% chance of 2 piglets, 10% chance of 3 piglets
+        if (rand < 0.5f) {
             return 1;
-        } else if (rand < 0.95f) {
+        } else if (rand < 0.9f) {
             return 2;
         } else {
             return 3;
